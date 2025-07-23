@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prakshep Goswami - Portfolio</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         :root {
             --primary-color: #ea580c;
@@ -636,6 +638,30 @@
             border-color: var(--primary-color);
         }
 
+        /* Success/Error Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.show {
+            display: block;
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -848,6 +874,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="skill-category">
                 <h3><i class="fas fa-database"></i> Database & Analytics</h3>
                 <div class="skill-item">
@@ -887,6 +914,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="skill-category">
                 <h3><i class="fas fa-tools"></i> Tools & Technologies</h3>
                 <div class="skill-item">
@@ -998,6 +1026,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="project-card">
                 <div class="project-image">
                     <i class="fas fa-futbol"></i>
@@ -1019,6 +1048,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="project-card">
                 <div class="project-image">
                     <i class="fas fa-chart-line"></i>
@@ -1045,7 +1075,7 @@
 
     <!-- Publications Section -->
     <section id="publications">
-        <h2 class="section-title">Publications</h2>
+        <h2 class="section-title"> National / International Publications</h2>
         <div class="publications-grid">
             <div class="publication-card">
                 <h3 class="publication-title">"Experimental Demonstration for learning analytics and data mining on e-assessment."</h3>
@@ -1082,21 +1112,21 @@
                     <i class="fas fa-code"></i>
                 </div>
                 <h3 class="achievement-title">400+ Coding Problems</h3>
-                <p class="achievement-description">Consistently solved over 400 problems across platforms like LeetCode and GeeksforGeeks, showcasing strong problem-solving skills.</p>
+                <p class="achievement-description">Consistently solved over 400 problems across platforms like <a href = "https://leetcode.com/u/prakshep_goswami/ " target="_blank" > LeetCode </a> , <a href = "https://www.geeksforgeeks.org/user/prakshep_goswami/" target="_blank">GeeksforGeeks</a>, showcasing strong problem-solving skills.</p>
             </div>
             <div class="achievement-card">
                 <div class="achievement-icon">
                     <i class="fas fa-trophy"></i>
                 </div>
                 <h3 class="achievement-title">Hackathon Achievement</h3>
-                <p class="achievement-description">Ranked among the Top 10 teams in the Prayatnn Hackathon organized by Acropolis Institute.</p>
+                <p class="achievement-description">Ranked among the Top 10 teams in the Prayatnn Hackathon organized by <a href = "https://aitr.ac.in/" target="_blank"> Acropolis Institute </a> .</p>
             </div>
             <div class="achievement-card">
                 <div class="achievement-icon">
                     <i class="fas fa-chart-bar"></i>
                 </div>
                 <h3 class="achievement-title">Financial Literacy Certification</h3>
-                <p class="achievement-description">Completed Financial Literacy Course For Bharat by National Institute of Securities Markets (NISM).</p>
+                <p class="achievement-description">Completed Financial Literacy Course For Bharat by National Institute of Securities Markets <a href = "https://www.nism.ac.in/" target="_blank "> (NISM). </a></p>
             </div>
             <div class="achievement-card">
                 <div class="achievement-icon">
@@ -1168,6 +1198,7 @@
                 </div>
             </div>
             <form class="contact-form" id="contactForm">
+                <div id="messageContainer"></div>
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" required>
@@ -1184,7 +1215,7 @@
                     <label for="message">Message</label>
                     <textarea id="message" name="message" rows="5" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
                     <i class="fas fa-paper-plane"></i>
                     Send Message
                 </button>
@@ -1193,6 +1224,11 @@
     </section>
 
     <script>
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("zyqdTeY3-2YtvB3P_"); // Replace with your EmailJS public key
+        })();
+
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
@@ -1286,25 +1322,57 @@
 
         createParticles();
 
-        // Contact Form
+        // Show message function
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.innerHTML = `<div class="message ${type} show">${message}</div>`;
+            
+            setTimeout(() => {
+                const messageEl = messageContainer.querySelector('.message');
+                if (messageEl) {
+                    messageEl.classList.remove('show');
+                    setTimeout(() => {
+                        messageContainer.innerHTML = '';
+                    }, 300);
+                }
+            }, 5000);
+        }
+
+        // Contact Form with EmailJS
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Simulate form submission
-            const submitBtn = this.querySelector('button[type="submit"]');
+            const submitBtn = document.getElementById('submitBtn');
             const originalText = submitBtn.innerHTML;
             
+            // Show loading state
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             submitBtn.disabled = true;
-            
-            setTimeout(() => {
-                submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-                setTimeout(() => {
+
+            // Get form data
+            const formData = {
+                from_name: document.getElementById('name').value,
+                from_email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                to_email: 'Prakshepgoswami@gmail.com' // Your email address
+            };
+
+            // Send email using EmailJS
+            emailjs.send('service_iycklkk', 'template_so2fw4d', formData)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    showMessage('Message sent successfully! I\'ll get back to you soon.', 'success');
+                    document.getElementById('contactForm').reset();
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    showMessage('Failed to send message. Please try again or contact me directly.', 'error');
+                })
+                .finally(function() {
+                    // Reset button state
                     submitBtn.innerHTML = originalText;
                     submitBtn.disabled = false;
-                    this.reset();
-                }, 2000);
-            }, 2000);
+                });
         });
 
         // Add stagger animation to elements
