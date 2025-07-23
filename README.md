@@ -2,7 +2,7 @@
 
 A modern, responsive personal portfolio website showcasing my skills, experience, projects, and achievements as a Software Developer and Research Scholar.
 
-![Portfolio Preview]([https://via.placeholder.com/800x400/ea580c/ffffff?text=Portfolio+Preview](https://prakshep-goswami.github.io/Prakshep-Portfolio/))
+![Portfolio Preview](https://prakshep-goswami.github.io/Prakshep-Portfolio/))
 
 ## 🌟 Features
 
